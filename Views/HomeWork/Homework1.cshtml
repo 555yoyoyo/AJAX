@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "HomeWork1";
+}
+
+<h1 class="text-center">台北旅遊網</h1>
+<div id="spot" class="row row-cols-1 row-cols-md-4 g-4"></div>
+
+@section Styles {
+    <style>
+        .col{
+            padding:50px;
+            border-radius:20px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const spotsContainer = document.getElementById('spot');
+
+            const spotsCardsHtml = spots.CommonFormat.Section.map(spot => {
+                const imgSrc = spot.file?.img?.[0]?.text || 'default-image-path.jpg';
+                const previewText = spot.xbody ? spot.xbody.substring(0, 100) : '';
+                return `
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="${imgSrc}" class="card-img-top" alt="Spot Image">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${spot.stitle}</h5>
+                                        <p class="card-text">${previewText}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+            }).join('');
+            
+            spotsContainer.innerHTML = spotsCardsHtml;
+        });
+    </script>
+}
+

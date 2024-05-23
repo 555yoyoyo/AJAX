@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "First";
+}
+
+<h1>First Ajax Demo</h1>
+<button id="buttonStart" class="btn btn-primary">Ajax 開始</button>
+<button id="buttonStop"  class="btn btn-warning">Ajax 停止</button>
+<img src="~/images/Beating hearts.gif" id="imgHeart" sytle="display:none"/>
+<div id="div1"></div>
+<br />
+<br />
+<br />
+@section Scripts {
+    <script>
+        const btn =document.querySelector('#buttonStart');
+        const btnStop = document.querySelector('#buttonStop');
+        const mydiv = document.querySelector('#div1');
+        const imgHeart = document.querySelector('#imgHeart');
+        let abortController;
+
+        btnStop.addEventListener('click', () => {
+            if (abortController) {
+                abortController.abort();
+            }
+        })
+
+
+        btn.addEventListener('click',async() => {
+        
+            try {
+                imgHeart.style.display = "inline"         //顯示圖片
+                btn.setAttribute('disabled', 'disabled'); //讓按鈕不能使用
+
+                //取消ajax程式
+                abortController = new AbortController();
+                const signal = abortController.signal;
+
+                setTimeout(() => {
+                    abortController.abort();
+                }, 5000);
+
+                //ajax程式
+                const response = await fetch('@Url.Content("~/api/index"),{signal}')
+                const data = await response.text();
+                if (!response.ok) throw new Error(`錯誤代碼：${response.status}`);
+                mydiv.innerHTML = `<h2>${data}</h2>`;
+            } catch (error) {
+                mydiv.innerHTML = `<h2>${error.message}</h2>`;
+            } finally {
+                imgHeart.style.display = "none"  //隱藏圖片
+                btn.removeAttribute('disabled'); //讓按鈕可以按
+            }
+
+
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //console.log(fetch('@Url.Content("~/api/index")'));
+
+        //    fetch('@Url.Content("~/api/index")')
+        //.then(response=>{
+        //    //console.log(response);
+        //return response.text();
+        
+        
+        //})
+        //.then(data=>{
+        //mydiv.innerHTML=`<h2>${data}</h2>`
+        //})
+       
+
+    </script>
+
+}
+@section Styles {
+    <style>
+
+    </style>
+}
+
