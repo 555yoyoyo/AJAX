@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MSIT158Site.Models;
+using System.IO;
 using System.Text;
 using TEST.Models;
 using TEST.Models.DTO;
@@ -100,6 +101,10 @@ namespace TEST.Controllers
             return Content(info, "text/plain", System.Text.Encoding.UTF8);
             // return Content($"Hello {member.Name}，{member.Age} 歲了，電子郵件是 {member.Email}", "text/html", System.Text.Encoding.UTF8);
         }
+
+       
+
+
 
 
         [HttpPost]

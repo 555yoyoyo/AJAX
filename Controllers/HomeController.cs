@@ -21,6 +21,11 @@ namespace TEST.Controllers
                
             return View(category);
         }
+        public IActionResult CallAPI() 
+        {
+            return View();
+        
+        }
         public IActionResult First()
         {
              return View();
