@@ -69,8 +69,6 @@ namespace TEST.Controllers
                 member.Name = "guest";
             }
             //檔案上傳寫進資料夾
-            //todo1 判斷檔案是否存在
-            //todo2 限制上傳檔案的大小跟類型 
 
             //完整路徑
             string uploadPath = Path.Combine(_hostEnvironment.WebRootPath, "uploads", avatar.FileName);
@@ -86,7 +84,6 @@ namespace TEST.Controllers
                 avatar.CopyTo(memoryStream);
                 imgByte = memoryStream.ToArray();
             }
-
 
             //取得上傳檔案的資訊
             //string info = $"{avatar.FileName} - {avatar.Length} - {avatar.ContentType}";
@@ -158,17 +155,18 @@ namespace TEST.Controllers
 
             return Json(spotsPaging);
         }
-
-
-
+        
 
 
          //檢查帳號是否存在
         public IActionResult CheckAccount(string name)
         {
-            var member = _context.Members.Any(m => m.Name == name);
+            bool memberExist = _context.Members.Any(m => m.Name == name);
+            if (memberExist)
+            return Content("1");
+            return Content("0");
 
-            return Content(member.ToString(), "text/plain", System.Text.Encoding.UTF8);
+            //return Content(member.ToString(), "text/plain", System.Text.Encoding.UTF8);
         }
     }
 }

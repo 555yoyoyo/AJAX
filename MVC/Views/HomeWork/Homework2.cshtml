@@ -1,20 +1,18 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Homework2";
 }
-
 
 <h1 class="text-center">Homework2 帳號檢查</h1>
 <div class="row">
     <div class="col-3"></div>
     <div class="col-6">
         <h5 class="text-center">使用者輸入資料，按下按鈕後，檢查該姓名是否已被使用過</h5>
-        <form id="userForm" action="~/api/CheckAccount" >
+        <form id="userForm">
             <div class="mb-3">
                 <label for="InputName" class="form-label">姓名</label>
-                <input type="text" class="form-control" id="InputName" name="Name" >
+                <input type="text" class="form-control" id="InputName" name="Name">
             </div>
-        <div id="div1" class="alert alert-warning mt-3"></div>
+            <div id="div1" class="alert alert-warning mt-3" style="display:none;"></div>
             <div class="mb-3">
                 <label for="InputEmail" class="form-label">電子郵件</label>
                 <input type="email" class="form-control" id="InputEmail" name="Email">
@@ -28,41 +26,40 @@
         <div id="div2" class="alert alert-info mt-3"></div>
     </div>
 </div>
-@section Styles {
-
-}
 
 @section Scripts {
-        <script>
-        const divResult = document.querySelector('#div1');
-        const btnSubmit = document.querySelector('#buttonSubmit');
-        const inpName = document.querySelector('#InputName');
-
-        btnSubmit.addEventListener('click', async (evt) => {
+    <script>
+        document.querySelector('#userForm').addEventListener('submit', async function(evt) {
             evt.preventDefault();
 
-            const url = `/api/CheckAccount?name=${encodeURIComponent(inpName.value)}`;
-            const response = await fetch(url);
+            const divResult = document.querySelector('#div1');
+            const inpName = document.querySelector('#InputName');
+            let responseText = null;
 
-            if (response.ok) {
-                const data = await response.text();
-                if (data === 'True') {
-                    divResult.textContent = '帳號已存在';
-                    divResult.classList.add('alert-danger');
-                    divResult.classList.remove('alert-success');
-                } else {
-                    divResult.textContent = '帳號可使用';
-                    divResult.classList.add('alert-success');
-                    divResult.classList.remove('alert-danger');
-                }
+            try {
+                const response = await fetch(`@Url.Content("~/api/CheckAccount")?name=${encodeURIComponent(inpName.value)}`);
+                responseText = await response.text();
+            } catch (error) {
+                responseText = null;
+                console.error('Error:', error);
+            }
+
+            if (responseText === "1") {
+                divResult.textContent = '帳號已存在';
+                divResult.classList.add('alert-danger');
+                divResult.classList.remove('alert-success');
+                divResult.style.display = 'block';
+            } else if (responseText === "0") {
+                divResult.textContent = '帳號可使用';
+                divResult.classList.add('alert-success');
+                divResult.classList.remove('alert-danger');
+                divResult.style.display = 'block';
             } else {
                 divResult.textContent = '發生錯誤';
                 divResult.classList.add('alert-danger');
                 divResult.classList.remove('alert-success');
+                divResult.style.display = 'block';
             }
         });
     </script>
-    }
-
-
-
+}
